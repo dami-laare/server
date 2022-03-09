@@ -32,13 +32,9 @@ exports.validateInviteCode = catchAsyncErrors(async (req, res, next) => {
 
     const invite = await Invite.findOne({code});
 
-    if(!invite || invite.status === 'used'){
+    if(!invite){
         return next(new ErrorHandler('Invite code is invalid', 401));
     }
-
-    invite.status = 'used';
-
-    await invite.save();
 
     res.status(200).json({
         success: true
