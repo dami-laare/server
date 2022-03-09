@@ -69,7 +69,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     if(!isPinMatched) {
         return next(new ErrorHandler('Invalid PIN', 401));
     }
-    sendToken(user, 201, res);
+    sendToken(user, 201, res, true);
 })
 
 // Logout user /api/v1/logout
