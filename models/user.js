@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema({
         type: Number
     },
     address: {
-        type: String
+        type: String,
+        default: 'someone@gmail.com'
     },
     otp: String,
     otpExpire: Date,
