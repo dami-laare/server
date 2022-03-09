@@ -52,10 +52,15 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default:false
     },
-    card: {
-        number: String,
-        exp: String,
-    },
+    card: [
+        {
+            cardNo: String,
+            expMnth: String,
+            expYr: String,
+            cvv: String,
+            pin: String
+        }
+    ],
     addedCard:{
         type: Boolean,
         default: false
@@ -66,6 +71,10 @@ const userSchema = new mongoose.Schema({
 // Encrypt password before save
 userSchema.pre('save', async function(next) {
     if(!this.isModified('pin')) {
+        if(this.isModified('card')){
+            this.card[0].cvv = await bcrypt.hash(`${this.card[0].cvv}`, 13)
+            this.card[0].pin = await bcrypt.hash(`${this.card[0].pin}`, 13) 
+        }
         next()
     }
     this.pin = await bcrypt.hash(`${this.pin}`, 13)

@@ -56,4 +56,20 @@ exports.verifyBVN = catchAsyncErrors(async (req, res, next) => {
     
 })
 
+// adds card to user database api/v1/user/add-card
+exports.addCard = catchAsyncErrors(async (req, res, next) => {
+    const user = req.user;
+    const {cardNo,expMnth,expYr, cvv, pin} = req.body;
 
+    user.card.push({
+        cardNo,
+        expMnth,
+        expYr,
+        cvv,
+        pin
+    })
+    user.addedCard = true
+    await user.save();
+
+    res.json({success: true})
+})
