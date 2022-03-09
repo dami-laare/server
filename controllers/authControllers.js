@@ -50,8 +50,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         otp,
         otpExpire: new Date(Date.now() + 10 * 60 * 1000)
     });
-
-    sendToken(user, 200, res)
+   
+    sendToken(user, 200, res, true)
 
 });
 
