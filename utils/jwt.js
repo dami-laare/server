@@ -18,6 +18,7 @@ const sendToken = (user, statusCode, res, login) => {
         success: true,
         token,
         verified: user.verified
+        details
     })
 };
 
