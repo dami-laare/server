@@ -62,6 +62,38 @@ exports.generateMealTicket = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
+exports.verifyMealTicket = catchAsyncErrors(async (req, res, next) => {
+    const {id} = req.body
+
+    try{
+
+        const ticket = await MealTicket.findById(id);
+    }catch(err){
+        return next(new ErrorHandler('Invalid Ticket',400))
+    }
+
+    const timeNow = new Date(Date.now())
+
+    if(!ticket){
+        console.log(error)
+        return next(new ErrorHandler('invalid Ticket', 400))
+
+    }
+
+    if(ticket.expires.getTime() - timeNow.getTime() <= 0) {
+        return next(new ErrorHandler('Ticket has expired', 400))
+    }   
+
+    ticket.expires = new Date(Date.now())
+
+    await ticket.save()
+
+    res.status(200).json({
+        success: true,
+        message: 'Ticket is valid'
+    })
+})
+
 exports.verifyUser = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.body.id)
 
