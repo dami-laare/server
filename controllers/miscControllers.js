@@ -72,6 +72,9 @@ exports.verifyMealTicket = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Invalid Ticket',400))
     }
 
+    const ticket = await MealTicket.findById(id);
+
+
     const timeNow = new Date(Date.now())
 
     if(!ticket){
