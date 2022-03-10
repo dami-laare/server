@@ -22,18 +22,7 @@ const server = app.listen(process.env.PORT || 4000, () => {
 })
 
 app.get('/', async (req, res) => {
-    QRCode.toDataURL('Hello', (err, url) => {
-        var regex = /^data:.+\/(.+);base64,(.*)$/;
-        
-        var matches = url.match(regex);
-        var ext = matches[1];
-        var data = matches[2];
-        var buffer = Buffer.from(data, 'base64');
-        console.log(ext)
-        console.log(data)
-        console.log(buffer)
-        fs.writeFileSync('data.' + ext, buffer);
-    })
+    res.send('Online')
 })
 
 // Handling unhandled promise rejections

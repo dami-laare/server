@@ -12,7 +12,7 @@ const { send } = require('express/lib/response');
 
 // Register a new user => api/v1/user/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-    let { phone, name, email } = req.body;
+    let { phone, name, email,address } = req.body;
 
     let formattedPhone = phone.replace(/0/, '+234');
 
@@ -31,6 +31,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         phone, 
         name,
         email, 
+        address,
         otp,
         otpExpire: new Date(Date.now() + 10 * 60 * 1000)
     });

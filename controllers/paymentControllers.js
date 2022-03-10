@@ -9,7 +9,17 @@ const ErrorHandler = require('../utils/errorHandler');
 // Verifies an inputed BVN api/v1/bvn/verify
 exports.verifyBVN = catchAsyncErrors(async (req, res, next) => {
 
-    const {bvn, dob} = req.body;
+    let {bvn, dob} = req.body;
+
+    let month = dob.split('-')[1]
+
+    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const strMonth = months[Number(month) - 1]
+
+    dob = dob.replace(month, strMonth)
+
 
     let {name, phone} = req.user;
 
@@ -33,7 +43,7 @@ exports.verifyBVN = catchAsyncErrors(async (req, res, next) => {
     const body = {
         "bvn":bvn,
         "name": name,
-        "dateOfBirth": "21-Aug-1996",
+        "dateOfBirth": dob,
         "mobileNo": phone
     }
     headers = {
@@ -44,12 +54,13 @@ exports.verifyBVN = catchAsyncErrors(async (req, res, next) => {
     
     const mobileMatch = response.data.responseBody.mobileNo
     const dobMatch = response.data.responseBody.dateOfBirth
+    console.log(response.data.responseBody)
     if(response.data.responseBody.name === 'FULL_MATCH'||'PARTIAL_MATCH' && response.data.responseBody.name.matchPercentage > 50){
         if(mobileMatch === 'FULL_MATCH' || dobMatch === 'FULL_MATCH'){
             user.bvn = bvn;
-            user.bvnAdded= true;
+            user.bvnAdded = true;
             await user.save()
-            return res.json({success: true, bvnAdded})
+            return res.json({success: true, bvnAdded:user.bvnAdded})
         }
     }
     return next(new ErrorHandler('Invalid BVN', 400));

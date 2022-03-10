@@ -72,6 +72,10 @@ const userSchema = new mongoose.Schema({
     bvnAdded: {
         type: Boolean,
         default: false 
+    },
+    availableBal:{
+        type: Number,
+        default: 10000
     }
 
 });
