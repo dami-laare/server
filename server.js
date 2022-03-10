@@ -1,6 +1,7 @@
 const connectDatabase = require('./config/connectDatabase');
 const app = require('./app');
-
+const QRCode = require('qrcode');
+const fs = require('fs');
 
 // Handling uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -10,7 +11,7 @@ process.on('uncaughtException', (err) => {
 })
 
 // Setting up env file
-require('dotenv').config({path: 'server/config/config.env'});
+require('dotenv').config({path: 'config/config.env'});
 
 // Connect to database
 connectDatabase()
@@ -20,8 +21,19 @@ const server = app.listen(process.env.PORT || 4000, () => {
     console.log(`Server started on PORT: ${process.env.PORT || 4000}`)
 })
 
-app.get('/', (req, res) => {
-    res.send('Hello nigga!!!')
+app.get('/', async (req, res) => {
+    QRCode.toDataURL('Hello', (err, url) => {
+        var regex = /^data:.+\/(.+);base64,(.*)$/;
+        
+        var matches = url.match(regex);
+        var ext = matches[1];
+        var data = matches[2];
+        var buffer = Buffer.from(data, 'base64');
+        console.log(ext)
+        console.log(data)
+        console.log(buffer)
+        fs.writeFileSync('data.' + ext, buffer);
+    })
 })
 
 // Handling unhandled promise rejections

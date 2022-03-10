@@ -5,6 +5,6 @@ const { isAuthenticated } = require('../middlewares/auth');
 const router = express.Router();
 
 router.route('/bvn/verify').post(isAuthenticated, verifyBVN);
-router.route('/bvn/verify').post(isAuthenticated, addCard);
+router.route('/user/add-card').post(isAuthenticated, addCard);
 
 module.exports = router

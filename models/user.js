@@ -19,10 +19,10 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        validate: [validator.isEmail, 'Please enter a valid email']
+        validate: [validator.isEmail, 'Please enter a valid email'],
     },
     bvn: {
-        type: Number
+        type: Number,
     },
     address: {
         type: String,
@@ -64,6 +64,14 @@ const userSchema = new mongoose.Schema({
     addedCard:{
         type: Boolean,
         default: false
+    },
+    registered:{
+        type: Boolean,
+        default: false
+    },
+    bvnAdded: {
+        type: Boolean,
+        default: false 
     }
 
 });

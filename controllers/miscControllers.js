@@ -3,6 +3,7 @@ const Invite = require('../models/inviteCode');
 const referralCodes = require('referral-codes');
 const ErrorHandler = require('../utils/errorHandler');
 const MealTicket = require('../models/mealTicket');
+const User = require('../models/user');
 
 //Admin generate an invite code => api/v1/admin/generate 
 exports.generateInviteCode = catchAsyncErrors(async (req, res, next) => {
@@ -58,5 +59,22 @@ exports.generateMealTicket = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         ticket
+    })
+})
+
+exports.verifyUser = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.body.id)
+
+    if(!user) {
+        return next(new ErrorHandler('User not found', 404))
+    }
+
+    user.verified = true
+
+    await user.save()
+
+    res.json({
+        message: 'User successfully verified',
+        success: true
     })
 })

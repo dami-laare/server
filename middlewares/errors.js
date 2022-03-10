@@ -27,7 +27,7 @@ module.exports = (err, req, res, next) => {
             error = new ErrorHandler(message, 400)
         }
         if (err.name === 'MongoServerError' && err.code === 11000) {
-            error = new ErrorHandler('A user already exists with the same email', 500)
+            error = new ErrorHandler('A user already exists with these details', 500)
         }
 
         if(err.name === 'TokenExpiredError'){

@@ -46,9 +46,10 @@ exports.verifyBVN = catchAsyncErrors(async (req, res, next) => {
     const dobMatch = response.data.responseBody.dateOfBirth
     if(response.data.responseBody.name === 'FULL_MATCH'||'PARTIAL_MATCH' && response.data.responseBody.name.matchPercentage > 50){
         if(mobileMatch === 'FULL_MATCH' || dobMatch === 'FULL_MATCH'){
-            user.verified = true;
+            user.bvn = bvn;
+            user.bvnAdded= true;
             await user.save()
-            return res.json({success: true, verified: user.verified})
+            return res.json({success: true, bvnAdded})
         }
     }
     return next(new ErrorHandler('Invalid BVN', 400));
@@ -60,6 +61,13 @@ exports.verifyBVN = catchAsyncErrors(async (req, res, next) => {
 exports.addCard = catchAsyncErrors(async (req, res, next) => {
     const user = req.user;
     const {cardNo,expMnth,expYr, cvv, pin} = req.body;
+
+    user.cards.forEach(card => {
+        if(card.cardNo === cardNo){
+            console.log('err')
+            return next(new ErrorHandler('You already added this card', 400))
+        }
+    })
 
     user.card.push({
         cardNo,
