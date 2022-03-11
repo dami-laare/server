@@ -20,13 +20,13 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
     const otp = await generateOTP();
     
-    // try{
-    //     // await sendOTP(otp, formattedPhone);
-    //     await sendMail(email, otp, next)
-    // }catch(err){
-    //     return next(new ErrorHandler(err.message, 400))
+    try{
+        await sendOTP(otp, formattedPhone);
+        await sendMail(email, otp, next)
+    }catch(err){
+        return next(new ErrorHandler(err.message, 400))
 
-    // }
+    }
     const user = await User.create({
         phone, 
         name,
@@ -50,7 +50,7 @@ exports.resendToken = catchAsyncErrors(async (req, res, next) => {
     const otp = await generateOTP();
 
     try{
-        // await sendOTP(otp, formattedPhone);
+        await sendOTP(otp, formattedPhone);
         await sendMail(email, otp, next)
     }catch(err){
         return next(new ErrorHandler(err.message, 400))

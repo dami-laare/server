@@ -1,7 +1,5 @@
 const connectDatabase = require('./config/connectDatabase');
 const app = require('./app');
-const QRCode = require('qrcode');
-const fs = require('fs');
 
 // Handling uncaught exceptions
 process.on('uncaughtException', (err) => {
