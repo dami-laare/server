@@ -41,6 +41,10 @@ module.exports = (err, req, res, next) => {
             error = new ErrorHandler(message, 400);
         }
 
+        if(err.statusCode === 500){
+            error = new ErrorHandler('An error has occured', 500)
+        }
+
         res.status(error.statusCode).json({
             success: false,
             message: error.message
