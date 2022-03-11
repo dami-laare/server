@@ -137,15 +137,19 @@ exports.addPin = catchAsyncErrors(async (req, res, next) => {
     expires.setMinutes(00);
     expires.setMinutes(00);
 
+    const createdAt = new Date(Date.now())
+
+
     const mealTicket = await MealTicket.create({
         createdBy: user._id,
         value: '200',
-        expires
+        expires,
+        createdAt
     })
 
     user.pin = req.body.pin;
     user.tickets.push({
-        ticket: mealTicket._id,
+        _id: mealTicket._id,
     })
     user.registered = true
 

@@ -4,6 +4,7 @@ const referralCodes = require('referral-codes');
 const ErrorHandler = require('../utils/errorHandler');
 const MealTicket = require('../models/mealTicket');
 const User = require('../models/user');
+const user = require('../models/user');
 
 //Admin generate an invite code => api/v1/admin/generate 
 exports.generateInviteCode = catchAsyncErrors(async (req, res, next) => {
@@ -44,21 +45,35 @@ exports.validateInviteCode = catchAsyncErrors(async (req, res, next) => {
 
 // Generates meal ticket ==> api/v1/ticket
 exports.generateMealTicket = catchAsyncErrors(async (req, res, next) => {
-    const {value} = req.body
     const createdBy = req.user
 
+    let value
+
+    if(createdBy.tickets.length > 0){
+        value = '500'
+    }else{
+        value = '1000'
+    }
     let date = new Date(Date.now());
 
     date.setHours(24)
     date.setMinutes(59)
     date.setSeconds(59)
 
+    const createdAt = new Date(Date.now())
 
-    const ticket = await MealTicket.create({createdBy, expires: date, value})
+    const ticket = await MealTicket.create({createdBy, expires: date, value, createdAt})
+
+    createdBy.tickets.push({_id: ticket._id})
+    
+
+    await createdBy.save()
+
+    const newTicket = await MealTicket.findById(ticket._id).populate('createdBy', 'name')
 
     res.status(200).json({
         success: true,
-        ticket
+        newTicket
     })
 })
 
@@ -93,7 +108,8 @@ exports.verifyMealTicket = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        message: 'Ticket is valid'
+        message: 'Ticket is valid',
+        ticket
     })
 })
 
@@ -111,5 +127,17 @@ exports.verifyUser = catchAsyncErrors(async (req, res, next) => {
     res.json({
         message: 'User successfully verified',
         success: true
+    })
+})
+
+exports.getUserTickets = catchAsyncErrors(async (req, res, next) => {
+
+    const user = await req.user.populate('tickets')
+
+    let tickets = user.tickets 
+
+    res.json({
+        success: true,
+        tickets
     })
 })

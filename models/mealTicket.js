@@ -14,7 +14,10 @@ const mealTicketSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'Valid'
+    },
+    createdAt: {
+        type: Date,
     }
 })
 
-module.exports = mongoose.model('Meal Ticket', mealTicketSchema);
+module.exports = mongoose.model('ticket', mealTicketSchema);

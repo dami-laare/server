@@ -34,16 +34,12 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: new Date(Date.now())
     },
-    role: {
-        type: String,
-        default: 'user'
-    },
     tickets: [
         {
-            ticket: {
-                type: mongoose.Schema.ObjectId,
-                ref: 'Meal Ticket'
-            }
+            
+            type: mongoose.Schema.ObjectId,
+            ref: 'ticket'
+            
         }
     ],
     resetPasswordToken: String,
@@ -58,7 +54,11 @@ const userSchema = new mongoose.Schema({
             expMnth: String,
             expYr: String,
             cvv: String,
-            pin: String
+            pin: String,
+            valid: {
+                type: Boolean,
+                default: false
+            }
         }
     ],
     addedCard:{
@@ -76,7 +76,17 @@ const userSchema = new mongoose.Schema({
     availableBal:{
         type: Number,
         default: 10000
-    }
+    },
+    transactions: [
+        {
+            transactionReference: String,
+            paymentReference: String,
+            status: {
+                type: String,
+                default: 'PENDING'
+            }
+        }
+    ]
 
 });
 
@@ -86,6 +96,9 @@ userSchema.pre('save', async function(next) {
         if(this.isModified('card')){
             this.card[0].cvv = await bcrypt.hash(`${this.card[0].cvv}`, 13)
             this.card[0].pin = await bcrypt.hash(`${this.card[0].pin}`, 13) 
+        }
+        if(this.isModified('bvn')){
+            this.bvn = await bcrypt.hash(`${this.bvn}`, 13)
         }
         next()
     }

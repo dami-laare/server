@@ -17,8 +17,7 @@ const sendToken = (user, statusCode, res, login) => {
     res.status(statusCode).cookie('token', token, options).json({
         success: true,
         token,
-        dashData: {verified: user.verified, bvnAdded:user.bvnAdded, availBal: user.availableBal},
-        tickets: user.tickets.length,
+        dashData: {verified: user.verified, bvnAdded:user.bvnAdded, availBal: user.availableBal, addedCard: user.addedCard},
         details,
         addedCard: user.addedCard
     })
