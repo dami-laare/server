@@ -28,9 +28,6 @@ process.on('unhandledRejection', (err) => {
     console.log(`ERROR: ${err.message}`);
     console.log(`Shutting down server due to unhandled rejection`)
     server.close(() => {
-        console.info("Server closed. Restarting.");
-
-        app.listen(process.env.PORT || 4000, () => {
-            console.log(`Server started on PORT: ${process.env.PORT || 4000}`)
-        });
-})})
+        process.exit(1);
+    })
+})
