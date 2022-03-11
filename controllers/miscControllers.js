@@ -65,6 +65,8 @@ exports.generateMealTicket = catchAsyncErrors(async (req, res, next) => {
     const ticket = await MealTicket.create({createdBy, expires: date, value, createdAt})
 
     createdBy.tickets.push({_id: ticket._id})
+
+    createdBy.availableBal = createdBy.availableBal - Number(value);
     
 
     await createdBy.save()
