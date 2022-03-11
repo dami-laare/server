@@ -35,7 +35,7 @@ exports.validateInviteCode = catchAsyncErrors(async (req, res, next) => {
     const invite = await Invite.findOne({code});
 
     if(code.length <= 0){
-        return next(new ErrorHandler('Invite code is invalid', 401));
+        return next(new ErrorHandler('Please enter an invite code', 401));
 
     }
 
