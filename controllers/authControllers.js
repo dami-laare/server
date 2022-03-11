@@ -14,6 +14,11 @@ const { send } = require('express/lib/response');
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     let { phone, name, email,address } = req.body;
 
+    if(!phone || !name || !email || !address) {
+        return next(new ErrorHandler('Please fill all fields'))
+    }
+    
+
     let formattedPhone = phone.replace(/0/, '+234');
 
     const preExistingUser = await User.findOne({phone});
@@ -27,16 +32,21 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler(err.message, 400))
 
     }
-    const user = await User.create({
-        phone, 
-        name,
-        email, 
-        address,
-        otp,
-        otpExpire: new Date(Date.now() + 10 * 60 * 1000)
-    });
-   
-    sendToken(user, 200, res, true)
+    try {
+        const user = await User.create({
+            phone, 
+            name,
+            email, 
+            address,
+            otp,
+            otpExpire: new Date(Date.now() + 10 * 60 * 1000)
+        });
+       
+        sendToken(user, 200, res, true)
+    }catch(err){
+        return next(new ErrorHandler(err.message, 400))
+    }
+    
 
 });
 

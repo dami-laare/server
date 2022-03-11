@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: [validator.isMobilePhone, 'Please enter a valid phone number']
     },
     pin: {
         type: String,
